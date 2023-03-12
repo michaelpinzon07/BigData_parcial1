@@ -24,16 +24,36 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with: 
-          python-version: 'pypy3.9'
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.8"
+      - name: Install dependencies
+        env:
+          VIRTUALENV: env
         run: |
-           ls
-           pwd
+          pip install virtualenv
+          virtualenv -p python $VIRTUALENV
+          source $VIRTUALENV/bin/activate
+          pip install flake8
+          pip install beautifulsoup4
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install awscli
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ASIATNTDJLQZCHUBDVXM
+          aws-secret-access-key: VqNrxrhaA13E5PJDRHY5I4Eng/aHcsTGujRZkUtY
+          aws-session-token: FwoGZXIvYXdzEAcaDPQWbfJ+5av7DRePeiLJARLYS5XPZAS8utnATB51dIDytVbkSh/gs+Lir7WtIk9jvWU/HNlI1BUaBh1GR4khb4FWxE/WAkpWoiA9KTwmladFg1mvkfr4IjCxVebDDC8GDTIRv0H+qVK7ceqVOFCP/+pVmlSYzI5c0SwqBD7eApKMrXmlHE0T0TlFfKfM31UfhkE/J/MZj0vuMOyyb9H8/PBEKAihY2la+Tb3iyHCsyrzgixgOuHkbpXAiszgU16rzVdvycfTHqx/aBi3RZS1vUQ7u85UIH5yUiiUkLmgBjItenE3JVFS2Kp6UKaxlrHbL2oCH2jkDCdsy/sYOIwJfnpFBun5jz6W+W1WW9ue
+          aws-region: "us-east-1"   
+          
+
+      - name: Actualiza etapas
+        env:
+          VIRTUALENV: env
+        run: |
+          source $VIRTUALENV/bin/activate
+          zappa update dev
+          zappa update dev2
+          source $VIRTUALENV/bin/activate
+          zappa invoke dev app.app
