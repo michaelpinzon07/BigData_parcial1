@@ -53,6 +53,7 @@ jobs:
         env:
           VIRTUALENV: env
         run: |
+          cd zappa
           source $VIRTUALENV/bin/activate
           zappa update dev
           zappa update dev2
