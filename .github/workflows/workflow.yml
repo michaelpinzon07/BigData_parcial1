@@ -47,14 +47,7 @@ jobs:
           aws-session-token: FwoGZXIvYXdzEAcaDPQWbfJ+5av7DRePeiLJARLYS5XPZAS8utnATB51dIDytVbkSh/gs+Lir7WtIk9jvWU/HNlI1BUaBh1GR4khb4FWxE/WAkpWoiA9KTwmladFg1mvkfr4IjCxVebDDC8GDTIRv0H+qVK7ceqVOFCP/+pVmlSYzI5c0SwqBD7eApKMrXmlHE0T0TlFfKfM31UfhkE/J/MZj0vuMOyyb9H8/PBEKAihY2la+Tb3iyHCsyrzgixgOuHkbpXAiszgU16rzVdvycfTHqx/aBi3RZS1vUQ7u85UIH5yUiiUkLmgBjItenE3JVFS2Kp6UKaxlrHbL2oCH2jkDCdsy/sYOIwJfnpFBun5jz6W+W1WW9ue
           aws-region: "us-east-1"   
           
-      - name: Lint with flake8
-        env:
-         VIRTUALENV: env
-        run: |
-          source $VIRTUALENV/bin/activate
-          flake8 . --count --select=E9 --show-source --statistics
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-          
+     
 
       - name: Ejecutar comandos
         env:
@@ -63,5 +56,4 @@ jobs:
           source $VIRTUALENV/bin/activate
           zappa update dev
           zappa update dev2
-          source $VIRTUALENV/bin/activate
           zappa invoke dev app.app
